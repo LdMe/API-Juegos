@@ -1,5 +1,16 @@
 const API_KEY = "4a220f3402654dd08d7d231c1e8a78e2";
 const API_URL = "https://api.rawg.io/api/";
+
+class MissingIDError extends Error {
+    constructor(){
+        super("El elemento no tiene id")
+    }
+}
+class ElementNotFoundError extends Error {
+    constructor(){
+        super("El elemento no existe")
+    }
+}
 class Game {
     constructor(id, name, background_image, rating,genres) {
         this.id = id;
@@ -38,12 +49,16 @@ class GenericCollection {
     }
     add(element) {
         if (!element.id) {
-            throw new Error("El elemento no tiene id");
+            throw new MissingIDError();
         }
         this.collection.set(element.id, element);
     }
     getById(id) {
-        return this.collection.get(id);
+        const element = this.collection.get(id);
+        if(!element) {
+            throw new ElementNotFoundError();
+        }
+        return element;
     }
     getElements() {
         return Array.from(this.collection.values());
@@ -123,19 +138,28 @@ function createGenres(genresData) {
 }
 
 async function main() {
-    const rawGames = await getRawGames();
-    const games = createGames(rawGames);
+    try{
+        const rawGames = await getRawGames();
+        const games = createGames(rawGames);
+        
+        const rawGenres = await getRawGenres();
+        const genres = createGenres(rawGenres);
     
-    const rawGenres = await getRawGenres();
-    const genres = createGenres(rawGenres);
-
-    const genre4 = genres.getById(4);
-    console.log(genre4)
-    const actionGames = games.getByGenreId(genre4.id);
-    console.log(actionGames)
-    games.addToFavorites(3939);
-    const favoriteGames = games.getFavorites();
-    console.log(favoriteGames)
+        const genre4 = genres.getById(400000000000);
+        console.log(genre4)
+        const actionGames = games.getByGenreId(genre4.id);
+        console.log(actionGames)
+        games.addToFavorites(3939);
+        const favoriteGames = games.getFavorites();
+        console.log(favoriteGames)
+    }catch(error){
+        if(error instanceof ElementNotFoundError){
+            console.log("no se ha encontrado");
+        }else{
+            console.log("Ha ocurrido un error")
+        }
+        // console.error(error);
+    }
 }
 
 main();
