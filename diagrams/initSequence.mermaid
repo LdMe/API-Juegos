@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant Main as index.js
+    participant App as App (Controlador)
+    participant API as APIManager (Red)
+    participant Model as Colecciones (Memoria)
+    participant Storage as StorageManager (Disco)
+    participant DOM as DOMManager (Vista)
+
+    Main->>App: 1. const miApp = new App()
+    Main->>App: 2. miApp.init()
+    
+    %% FASE 1: Red
+    App->>API: 3. APIManager.getRawGames() y getRawGenres()
+    API-->>App: Arrays de objetos planos (JSON)
+    
+    %% FASE 2: Memoria
+    App->>Model: 4. this.crearJuegos() y this.crearGeneros()
+    Note over Model: Nacen las instancias<br/>de Game y Genre
+    
+    %% FASE 3: Disco Duro
+    App->>Storage: 5. StorageManager.loadFavorites()
+    Storage-->>App: Array de IDs guardados (ej: [3939])
+    
+    loop Por cada ID guardado
+        App->>Model: 6. this.games.addToFavorites(id)
+    end
+    
+    %% FASE 4: Pantalla
+    App->>DOM: 7. DOMManager.renderGames() y renderGenres()
+    Note over DOM: Construye el HTML final
+    
+    %% FASE 5: Eventos
+    App->>DOM: 8. setupEventListeners()

@@ -1,0 +1,67 @@
+classDiagram
+    %% CONTROLADOR PRINCIPAL
+    class App {
+        +GameCollection games
+        +GenericCollection genres
+        +init()
+        +crearJuegos(gamesData)
+        +crearGeneros(genresData)
+        +setupEventListeners()
+        +handleToggleFavorite(id) 
+    }
+
+    %% INFRAESTRUCTURA (Los 3 pilares externos)
+    class APIManager {
+        <<static>>
+        +API_URL String
+        +getData(route) Array
+        +getRawGames() Array
+        +getRawGenres() Array
+    }
+    class DOMManager {
+        <<static>>
+        +renderGames(gamesArray, container)
+        +renderGenres(genresArray, container)
+        +actualizarBotonFavorito(id, esFavorito)
+    }
+    class StorageManager {
+        <<static>>
+        +saveFavorites(favoritesArray)
+        +loadFavorites() Array
+    }
+
+    %% MODELOS Y COLECCIONES (Lógica Core)
+    class Game {
+        +Number id
+        +String name
+        +Boolean isFavorite
+        +toggleFavorite()
+    }
+    class Genre {
+        +Number id
+        +String name
+    }
+    class GenericCollection {
+        +Map collection
+        +add(element)
+        +getById(id)
+        +getElements() Array
+    }
+    class GameCollection {
+        +addToFavorites(id)
+        +toggleFavorite(id)
+        +getFavorites() Array
+    }
+
+    %% RELACIONES
+    %% App orquesta todo
+    App --> APIManager : Pide datos externos
+    App --> DOMManager : Manda pintar UI
+    App --> StorageManager : Manda guardar/cargar
+    App *-- GameCollection : Instancia (this.games)
+    App *-- GenericCollection : Instancia (this.genres)
+    
+    %% Herencia y Composición
+    GenericCollection <|-- GameCollection : HEREDA
+    GenericCollection o-- Genre : Contiene
+    GameCollection o-- Game : Contiene

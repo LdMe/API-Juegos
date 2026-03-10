@@ -1,0 +1,29 @@
+sequenceDiagram
+    actor Usuario
+    participant DOM as DOMManager (Vista)
+    participant App as App (Controlador)
+    participant Model as GameCollection (Datos)
+    participant Storage as StorageManager (Disco)
+
+    Usuario->>DOM: 1. Clic en "♥" (ej. Juego ID: 3939)
+    
+    %% La Vista avisa al Controlador
+    DOM->>App: 2. App.handleToggleFavorite(3939)
+    
+    %% FASE 1: App actualiza la memoria (El Modelo)
+    App->>Model: 3. this.games.toggleFavorite(3939)
+    Note over Model: Se invierte el booleano<br/>isFavorite en el Map
+    
+    %% FASE 2: App guarda en el Disco Duro (La Persistencia)
+    App->>Model: 4. this.games.getFavorites()
+    Model-->>App: Array de juegos favoritos actualizados
+    
+    App->>Storage: 5. StorageManager.saveFavorites(arrayFavoritos)
+    Note over Storage: Se convierte a JSON y<br/>se guarda en localStorage
+    
+    %% FASE 3: App actualiza la Pantalla (La Vista)
+    App->>Model: 6. this.games.getById(3939)
+    Model-->>App: Instancia del Juego (para saber su nuevo estado)
+    
+    App->>DOM: 7. DOMManager.actualizarBotonFavorito(3939, juego.isFavorite)
+    Note over DOM: Se cambia la clase CSS<br/>(corazón relleno/vacío)
