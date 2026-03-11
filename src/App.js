@@ -25,9 +25,30 @@ class App {
             this.domManager.renderGenres(this.genres.getElements(),genresSection)
         }
 
+        this.setupListeners();
+
 
     }
 
+    setupListeners(){
+        const buttons = [...document.getElementsByClassName("fav-button")];
+        buttons.forEach(button =>{
+            button.addEventListener("click",()=>{
+                const id = parseInt(button.dataset.gameId);
+                this.handleToggleFavorite(id);
+                const isGameFavorite = this.games.isFavorite(id);
+                if(isGameFavorite){
+                    button.textContent = "Quitar de favoritos";
+                }else{
+                    button.textContent ="Añadir a favoritos";
+                }
+
+            })
+        })
+    }
+    handleToggleFavorite(id){
+        this.games.toggleFavorite(id);
+    }
     createGames(gamesData) {
         // return gamesData.map(game => new Game(game.id,game.name,game.background_image,game.rating));
         const collection = new GameCollection();

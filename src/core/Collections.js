@@ -29,6 +29,10 @@ class GameCollection extends GenericCollection {
         const game = this.collection.get(id);
         game.setFavorite(false);
     }
+    isFavorite(id){
+        const game = this.collection.get(id);
+        return game.isFavorite;
+    }
     toggleFavorite(id) {
         const game = this.collection.get(id);
         game.toggleFavorite();

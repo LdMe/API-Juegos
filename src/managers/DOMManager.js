@@ -26,7 +26,16 @@ class DOMManager {
         rating.classList.add("rating");
         rating.textContent = "rating: "+game.rating;
 
-        article.append(image,title,rating);
+        // boton favoritos
+        const favButton = document.createElement("button");
+        favButton.setAttribute("id",`fav-${game.id}`);
+        favButton.dataset.gameId= game.id;
+        favButton.classList.add("fav-button");
+        favButton.textContent = "Añadir a favoritos";
+
+
+
+        article.append(image,title,rating,favButton);
         return article;
 
     }
