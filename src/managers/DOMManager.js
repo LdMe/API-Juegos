@@ -54,6 +54,7 @@ class DOMManager {
         const article = document.createElement("article");
         article.classList.add("genre-card")
         article.setAttribute("id", `genre-${genre.id}`);
+        article.dataset.id=genre.id;
         article.style.backgroundImage = genre.backgroundImage;
 
         const title = document.createElement("h3");

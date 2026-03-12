@@ -23,18 +23,30 @@ class GenericCollection {
 class GameCollection extends GenericCollection {
     addToFavorites(id) {
         const game = this.collection.get(id);
+        if(!game){
+            return;
+        }
         game.setFavorite(true);
     }
     removeFromFavorites(id) {
         const game = this.collection.get(id);
+        if(!game){
+            return;
+        }
         game.setFavorite(false);
     }
     isFavorite(id){
         const game = this.collection.get(id);
+        if(!game){
+            return false;
+        }
         return game.isFavorite;
     }
     toggleFavorite(id) {
         const game = this.collection.get(id);
+        if(!game){
+            return;
+        }
         game.toggleFavorite();
     }
     getByGenreId(id){

@@ -5,3 +5,7 @@
         aspect-ratio: 4/3;
     }
 }
+
+.selected {
+    background-color: red;
+}
