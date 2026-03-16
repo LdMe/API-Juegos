@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        .error {
+            border: 1px solid red;
+            background-color: #ceda00;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="errors"></ul>
+    <form action="google.com" id="register-form">
+        <label for="name">Nombre</label>
+        <input type="text" name="name" id="name" required value="hola">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required value="hola@mail.com">
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" id="password" required value="1234">
+        <label for="passwordRepeat">Repetir contraseña</label>
+        <input type="password" name="passwordRepeat" id="passwordRepeat" required value="2345">
+        <label for="phone">Telefono</label>
+        <input type="tel" name="phone" id="phone" value="346534534">
+        <button type="reset">Limpiar</button>
+    </form>
+
+
+    <button form="register-form">Enviar</button>
+
+    <script>
+        // listener email
+        const emailInput = document.getElementById("email");
+        emailInput.addEventListener("input", (e) => {
+            const emailRegex = /\w+@\w+\.\w+/
+            if (!emailRegex.test(emailInput.value)) {
+                emailInput.classList.add("error")
+            } else {
+                emailInput.classList.remove("error")
+            }
+        })
+
+        // listener passwordRepeat
+        const passwordRepeatInput = document.getElementById("passwordRepeat");
+        const passwordInput = document.getElementById("password");
+        passwordRepeatInput.addEventListener("input", (e) => {
+            
+            if (passwordRepeatInput.value !== passwordInput.value) {
+                passwordRepeatInput.classList.add("error")
+            } else {
+                passwordRepeatInput.classList.remove("error")
+            }
+        })
+        // listener submit
+        const form = document.getElementById("register-form");
+        form.addEventListener("submit", (e) => {
+            const errors = [];
+            e.preventDefault();
+            const formData = new FormData(form);
+            const datos = Object.fromEntries(formData);
+            if (datos.name.length < 3) {
+                errors.push("El nombre debe tener al menos 3 caracteres.");
+            }
+            const emailRegex = /\w+@\w+\.\w+/
+            if (!emailRegex.test(datos.email)) {
+                errors.push("El email no tiene el formato correcto.")
+            }
+            if (datos.password !== datos.passwordRepeat) {
+                errors.push("Las contraseñas no coinciden.")
+            }
+            const phoneRegex = /(\+34\s)?[0-9]{9}/
+            if (!phoneRegex.test(datos.phone)) {
+                errors.push("El número de teléfono debe tener 9 digitos y opcionalmente '+34 '.")
+            }
+            const todoVaBien = errors.length === 0;
+            const errorsUl = document.getElementById("errors");
+            errorsUl.innerHTML = "";
+            if (todoVaBien) {
+                // fetch ...
+                alert("todo perfect")
+            } else {
+                errors.forEach(error => {
+                    const li = document.createElement("li");
+                    li.textContent = error;
+                    errorsUl.appendChild(li);
+                })
+            }
+
+        })
+    </script>
+</body>
+
+</html>
