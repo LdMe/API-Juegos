@@ -1,3 +1,4 @@
+import {MissingIDError,ElementNotFoundError} from "./errors.js"
 class GenericCollection {
     constructor() {
         this.collection = new Map();
